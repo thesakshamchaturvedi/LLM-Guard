@@ -146,12 +146,18 @@ async def analyze_code(input: CodeInput):
             "temperature": 0.2,
         }
 
-        response = model.generate_content(
+        print("Sending request to Gemini API...")
+        start_time = time.time()
+
+        response = await model.generate_content_async(
             f"{SYSTEM_PROMPT}\n\n{user_message}",
             generation_config=generation_config,
             safety_settings=safety_settings
         )
         
+        end_time = time.time()
+        print(f"Received response from Gemini API in {end_time - start_time:.2f} seconds.")
+
         text_response = ""
         if not response.candidates:
             feedback = response.prompt_feedback if response.prompt_feedback else "No prompt feedback available."
@@ -187,7 +193,7 @@ async def analyze_code(input: CodeInput):
         if not isinstance(result, dict) or 'summary' not in result or 'vulnerabilities' not in result:
             raise ValueError("Invalid response structure")
             
-        print("Successfully received and parsed response from Gemini.")
+        print("Successfully parsed response and sending back to client.")
         return result
         
     except json.JSONDecodeError as e:
