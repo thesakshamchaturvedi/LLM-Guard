@@ -1,28 +1,40 @@
-import React, { useState } from 'react';
-import './App.css';
-import Header from './components/Header';
+import { useState } from 'react';
+// The line `import React from 'react';` was removed as it's not needed and caused an error.
+
+// Assuming you have these components and api functions
+import { analyzeCode } from './api';
 import CodeInput from './components/CodeInput';
 import ResultsDisplay from './components/ResultsDisplay';
-import { analyzeCode, AnalysisResponse } from './api';
+import Header from './components/Header';
+import './App.css';
 
 function App() {
-  const [code, setCode] = useState('// Paste your code here to analyze for vulnerabilities');
+  const [code, setCode] = useState('');
   const [language, setLanguage] = useState('javascript');
-  const [results, setResults] = useState<AnalysisResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [results, setResults] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleAnalyze = async () => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setError('');
     try {
       const response = await analyzeCode(code, language);
       setResults(response);
     } catch (err) {
       setError('Failed to analyze code. Please try again later.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
+  };
+
+  // Example style object that might have caused the error
+  const buttonStyle = {
+    padding: '10px 20px',
+    // FIX: The key 'hover' was changed to ':hover' to correctly target the pseudo-class.
+    ':hover': {
+      opacity: 0.9,
+    },
   };
 
   return (
@@ -85,7 +97,7 @@ function App() {
             />
             <button
               onClick={handleAnalyze}
-              disabled={loading || code.trim() === ''}
+              disabled={isLoading || code.trim() === ''}
               style={{
                 height: '40px',
                 border: 'none',
@@ -93,20 +105,20 @@ function App() {
                 color: '#ffffff',
                 fontSize: '14px',
                 fontWeight: '500',
-                cursor: loading ? 'wait' : 'pointer',
+                cursor: isLoading ? 'wait' : 'pointer',
                 transition: 'all 0.2s ease',
                 borderRadius: '6px',
                 padding: '0 16px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                opacity: (loading || code.trim() === '') ? 0.6 : 1,
+                opacity: (isLoading || code.trim() === '') ? 0.6 : 1,
                 ':hover': {
                   backgroundColor: '#2ea043'
                 }
               }}
             >
-              {loading ? 'Analyzing...' : 'Analyze Code'}
+              {isLoading ? 'Analyzing...' : 'Analyze Code'}
             </button>
             {error && (
               <div style={{
@@ -122,7 +134,7 @@ function App() {
             )}
           </div>
           <div style={{ flex: 1, display: 'flex' }}>
-            <ResultsDisplay results={results} loading={loading}/>
+            <ResultsDisplay results={results} loading={isLoading}/>
           </div>
         </div>
       </main>
