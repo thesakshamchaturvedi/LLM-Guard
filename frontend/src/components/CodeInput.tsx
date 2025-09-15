@@ -3,11 +3,21 @@ import Editor from '@monaco-editor/react';
 
 interface CodeInputProps {
   code: string;
+  setCode: (code: string) => void;
   language: string;
-  onCodeChange: (value: string) => void;
+  setLanguage: (lang: string) => void;
 }
 
-const CodeInput: React.FC<CodeInputProps> = ({ code, language, onCodeChange }) => {
+const CodeInput: React.FC<CodeInputProps> = ({ code, setCode, language, setLanguage }) => {
+  const editorOptions = {
+    selectOnLineNumbers: true,
+    minimap: { enabled: false },
+    guides: {
+      indentation: true,
+    },
+    automaticLayout: true,
+  };
+
   return (
     <div
       style={{
@@ -22,37 +32,27 @@ const CodeInput: React.FC<CodeInputProps> = ({ code, language, onCodeChange }) =
         border: '1px solid #30363d',
       }}
     >
+      <div className="language-selector">
+        <label htmlFor="language">Language: </label>
+        <select
+          id="language"
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+        >
+          <option value="javascript">JavaScript</option>
+          <option value="python">Python</option>
+          <option value="yaml">YAML</option>
+          <option value="dockerfile">Dockerfile</option>
+        </select>
+      </div>
       <Editor
         height="100%"
         width="100%"
         language={language}
         value={code}
-        onChange={(value) => onCodeChange(value || '')}
+        onChange={(value) => setCode(value || '')}
+        options={editorOptions}
         theme="vs-dark"
-        options={{
-          selectOnLineNumbers: true,
-          automaticLayout: true,
-          minimap: { enabled: false },
-          wordWrap: 'on',
-          fontSize: 14,
-          fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
-          lineHeight: 21,
-          padding: { top: 16, bottom: 16 },
-          scrollbar: {
-            vertical: 'visible',
-            horizontal: 'visible',
-            useShadows: false,
-            verticalScrollbarSize: 10,
-            horizontalScrollbarSize: 10,
-          },
-          overviewRulerBorder: false,
-          hideCursorInOverviewRuler: true,
-          renderLineHighlight: 'all',
-          lineNumbers: 'on',
-          lineDecorationsWidth: 0,
-          renderIndentGuides: true,
-          smoothScrolling: true,
-        }}
       />
     </div>
   );
