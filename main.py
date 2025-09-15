@@ -149,7 +149,11 @@ async def analyze_code(input: CodeInput):
         print("Sending request to Gemini API...")
         start_time = time.time()
 
-        response = await model.generate_content_async(
+        # FIX: Replaced the problematic async call with a standard synchronous call
+        # running in a separate thread. This prevents event loop conflicts and
+        # is the robust way to handle long-running tasks in FastAPI.
+        response = await asyncio.to_thread(
+            model.generate_content,
             f"{SYSTEM_PROMPT}\n\n{user_message}",
             generation_config=generation_config,
             safety_settings=safety_settings
