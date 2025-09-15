@@ -2,7 +2,7 @@ import { useState } from 'react';
 // The line `import React from 'react';` was removed as it's not needed and caused an error.
 
 // Assuming you have these components and api functions
-import { analyzeCode } from './api';
+import { analyzeCode, AnalysisResponse } from './api';
 import CodeInput from './components/CodeInput';
 import ResultsDisplay from './components/ResultsDisplay';
 import Header from './components/Header';
@@ -11,7 +11,7 @@ import './App.css';
 function App() {
   const [code, setCode] = useState('');
   const [language, setLanguage] = useState('javascript');
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState<AnalysisResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -19,7 +19,7 @@ function App() {
     setIsLoading(true);
     setError('');
     try {
-      const response = await analyzeCode({ code_snippet: code, language });
+      const response = await analyzeCode(code, language);
       setResults(response);
     } catch (err) {
       setError('Failed to analyze code. Please try again later.');
@@ -83,6 +83,7 @@ function App() {
               code={code}
               language={language}
               setCode={setCode}
+              setLanguage={setLanguage}
             />
             <button
               onClick={handleAnalyze}
