@@ -19,6 +19,11 @@ export interface AnalysisResponse {
 }
 
 export const analyzeCode = async (code: string, language: string): Promise<AnalysisResponse> => {
+  // This check helps prevent the error you're seeing.
+  if (!API_URL.startsWith('http')) {
+    throw new Error(`The API URL is not configured correctly. It must start with http or https. Received: ${API_URL}`);
+  }
+
   const response = await fetch(`${API_URL}/analyze`, {
     method: 'POST',
     headers: {
@@ -31,8 +36,8 @@ export const analyzeCode = async (code: string, language: string): Promise<Analy
   });
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.detail || 'An error occurred during analysis.');
+    const errorData = await response.json().catch(() => ({ detail: 'Failed to parse error response.' }));
+    throw new Error(errorData.detail || `Request failed with status ${response.status}`);
   }
 
   return response.json();
