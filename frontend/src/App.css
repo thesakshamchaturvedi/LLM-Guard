@@ -234,6 +234,14 @@ body {
   font-family: var(--font-family);
 }
 
+.language-select:hover {
+  border-color: #6e7681;
+}
+
+.analyze-button:hover {
+  background-color: #2ea043;
+}
+
 @media (max-width: 768px) {
   .main-content {
     grid-template-columns: 1fr;
