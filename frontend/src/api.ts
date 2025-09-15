@@ -1,13 +1,4 @@
-import axios from 'axios';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
-
-const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export interface Vulnerability {
   line_number: number;
@@ -28,14 +19,21 @@ export interface AnalysisResponse {
 }
 
 export const analyzeCode = async (code: string, language: string): Promise<AnalysisResponse> => {
-  try {
-    const response = await apiClient.post('/analyze', {
+  const response = await fetch(`${API_URL}/analyze`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
       code_snippet: code,
       language: language,
-    });
-    return response.data;
-  } catch (error) {
-    console.error('API Error:', error);
-    throw new Error('Failed to analyze code');
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'An error occurred during analysis.');
   }
+
+  return response.json();
 };
