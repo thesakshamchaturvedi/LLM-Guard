@@ -19,22 +19,13 @@ function App() {
     setIsLoading(true);
     setError('');
     try {
-      const response = await analyzeCode(code, language);
+      const response = await analyzeCode({ code_snippet: code, language });
       setResults(response);
     } catch (err) {
       setError('Failed to analyze code. Please try again later.');
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // Example style object that might have caused the error
-  const buttonStyle = {
-    padding: '10px 20px',
-    // FIX: The key 'hover' was changed to ':hover' to correctly target the pseudo-class.
-    ':hover': {
-      opacity: 0.9,
-    },
   };
 
   return (
@@ -60,6 +51,7 @@ function App() {
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
               aria-label="Select programming language"
+              className="language-select"
               style={{
                 padding: '10px 12px',
                 borderRadius: '6px',
@@ -71,9 +63,6 @@ function App() {
                 cursor: 'pointer',
                 outline: 'none',
                 transition: 'all 0.2s ease',
-                ':hover': {
-                  borderColor: '#6e7681'
-                }
               }}
             >
               <option value="javascript">JavaScript</option>
@@ -93,11 +82,12 @@ function App() {
             <CodeInput
               code={code}
               language={language}
-              onCodeChange={setCode}
+              setCode={setCode}
             />
             <button
               onClick={handleAnalyze}
               disabled={isLoading || code.trim() === ''}
+              className="analyze-button"
               style={{
                 height: '40px',
                 border: 'none',
@@ -113,9 +103,6 @@ function App() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 opacity: (isLoading || code.trim() === '') ? 0.6 : 1,
-                ':hover': {
-                  backgroundColor: '#2ea043'
-                }
               }}
             >
               {isLoading ? 'Analyzing...' : 'Analyze Code'}
