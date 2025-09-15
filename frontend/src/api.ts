@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = "http://localhost:8000";
 
 export interface Vulnerability {
   line_number: number;
@@ -19,11 +19,6 @@ export interface AnalysisResponse {
 }
 
 export const analyzeCode = async (code: string, language: string): Promise<AnalysisResponse> => {
-  // This check helps prevent the error you're seeing.
-  if (!API_URL.startsWith('http')) {
-    throw new Error(`The API URL is not configured correctly. It must start with http or https. Received: ${API_URL}`);
-  }
-
   const response = await fetch(`${API_URL}/analyze`, {
     method: 'POST',
     headers: {
