@@ -49,6 +49,7 @@ class AnalysisResponse(BaseModel):
 # Configure Google Gemini API client
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if GEMINI_API_KEY is None:
+    print("FATAL ERROR: GEMINI_API_KEY environment variable not set")
     raise RuntimeError("GEMINI_API_KEY environment variable not set")
 genai.configure(api_key=GEMINI_API_KEY)
 
@@ -99,6 +100,8 @@ You MUST respond ONLY with a single, valid JSON object. Do not include any intro
 
 @app.get("/")
 async def root():
+    # Diagnostic log for the root endpoint
+    print("Root endpoint '/' was hit!")
     return {"message": "Welcome to LLM-Guard AI Security Analyst"}
 
 @app.get("/health")
@@ -107,6 +110,9 @@ async def health_check():
 
 @app.post("/analyze", response_model=AnalysisResponse)
 async def analyze_code(input: CodeInput):
+    # Diagnostic log for the analyze endpoint
+    print(f"'/analyze' endpoint hit with language: {input.language}")
+    
     # Basic input validation
     if not input.code_snippet.strip():
         raise HTTPException(status_code=400, detail="Code snippet cannot be empty")
@@ -181,6 +187,7 @@ async def analyze_code(input: CodeInput):
         if not isinstance(result, dict) or 'summary' not in result or 'vulnerabilities' not in result:
             raise ValueError("Invalid response structure")
             
+        print("Successfully received and parsed response from Gemini.")
         return result
         
     except json.JSONDecodeError as e:
