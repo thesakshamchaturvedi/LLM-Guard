@@ -134,12 +134,15 @@ async def analyze_code(input: CodeInput):
             genai.types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: genai.types.HarmBlockThreshold.BLOCK_NONE,
         }
 
+        # FIX 1: Increased token limit to prevent truncated responses
+        generation_config = {
+            "max_output_tokens": 8192,
+            "temperature": 0.2,
+        }
+
         response = model.generate_content(
             f"{SYSTEM_PROMPT}\n\n{user_message}",
-            generation_config=genai.types.GenerationConfig(
-                temperature=0.1,
-                max_output_tokens=2000,
-            ),
+            generation_config=generation_config,
             safety_settings=safety_settings
         )
         
