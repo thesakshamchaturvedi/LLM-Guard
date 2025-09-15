@@ -1,0 +1,243 @@
+:root {
+  --background-primary: #1a1a2e;
+  --background-secondary: #16213e;
+  --background-tertiary: #0f3460;
+  --primary-accent: #e94560;
+  --text-primary: #ffffff;
+  --text-secondary: #a7a9be;
+  --border-color: #2c3e50;
+  --success-color: #27ae60;
+  --error-color: #c0392b;
+  --font-family: 'Roboto Mono', 'Segoe UI', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Styles */
+.app-header {
+  background: var(--background-secondary);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-content {
+    text-align: left;
+}
+
+.header-content h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-accent);
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+/* Main Content Layout */
+.main-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.card {
+  background: var(--background-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.editor-section select {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: var(--background-tertiary);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-family);
+}
+
+.editor-section button {
+  padding: 0.8rem 1.5rem;
+  background: var(--primary-accent);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.editor-section button:hover:not(:disabled) {
+  background: #ff637f;
+  transform: translateY(-2px);
+}
+
+.editor-section button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  color: var(--text-primary);
+  background: var(--error-color);
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.results-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.summary-section {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.summary-section h2 {
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.risk-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  color: white;
+  border-radius: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.assessment {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.vulnerabilities-section h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.no-vulnerabilities {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(39, 174, 96, 0.1);
+  border-radius: 8px;
+  color: var(--success-color);
+  font-size: 1.1rem;
+  border: 1px solid var(--success-color);
+}
+
+.vulnerability-item {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: var(--background-primary);
+}
+
+.vuln-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.vuln-type {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.vuln-risk {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.vuln-line {
+  background: var(--background-tertiary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.vuln-description p {
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.vuln-recommendation {
+    margin-top: 1rem;
+}
+
+.vuln-recommendation h4 {
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.vuln-recommendation pre {
+  line-height: 1.6;
+  color: #a7a9be;
+  background: #0d1a2e;
+  padding: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid var(--primary-accent);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: var(--font-family);
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1rem;
+  }
+}

@@ -1,0 +1,40 @@
+# Sample vulnerable Dockerfile for testing LLM-Guard
+
+FROM ubuntu:18.04
+
+# Running as root user - SECURITY ISSUE
+USER root
+
+# Hardcoded secrets in environment variables
+ENV DB_PASSWORD=admin123
+ENV API_KEY=sk-1234567890abcdef
+
+# Installing packages without pinning versions
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    curl \
+    wget
+
+# Copying sensitive files
+COPY secrets.txt /app/
+COPY private_key.pem /app/
+
+# Exposing unnecessary ports
+EXPOSE 22
+EXPOSE 3306
+EXPOSE 80
+EXPOSE 443
+
+# Running with elevated privileges
+RUN chmod 777 /app
+RUN chown -R root:root /app
+
+# Using ADD instead of COPY for local files
+ADD app.tar.gz /app/
+
+# No health check defined
+# HEALTHCHECK --interval=30s --timeout=3s CMD curl -f http://localhost/ || exit 1
+
+# Running multiple processes in one container
+CMD service ssh start && python3 /app/main.py && tail -f /dev/null
